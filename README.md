@@ -109,4 +109,4 @@ node scripts/run-verification.cjs --packaged-resources=portable-dist/win-unpacke
 
 ## AI Assist Usage Disclaimer 
 
-As with most projects nowadays, this project utilized agentic AI tools to assist in development and testing of this tool. This project is **not** "vibe-coded", instead makes use of "Agentic Engineering", where all choices and implementations have had a human operatoer dedicate time into designing, writing, editing and reviewing code.
+As with most projects nowadays, this project utilized agentic AI tools to assist in development and testing of this tool. This project is **not** "vibe-coded", instead makes use of "Agentic Engineering", where all choices and implementations have had a human operator dedicate time into designing, writing, editing and reviewing code.
