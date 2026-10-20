@@ -1,0 +1,5 @@
+{
+  "repository": "https://github.com/PokeAPI/pokeapi",
+  "revision": "6fd69dfe90465ba96534f6816fc817737d1f97f6",
+  "rebuild": "python scripts/build-encounter-catalog.py 6fd69dfe90465ba96534f6816fc817737d1f97f6"
+}

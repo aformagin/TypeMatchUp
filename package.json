@@ -1,0 +1,47 @@
+{
+  "name": "type-match-up",
+  "version": "1.1.0",
+  "description": "A desktop Pok\u00c3\u00a9mon team type-matchup analyzer.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --enable-logging",
+    "rebuild:native": "electron-builder install-app-deps",
+    "postinstall": "npm run rebuild:native",
+    "package:win": "electron-builder --win portable --config.directories.output=portable-dist",
+    "package:portable": "npm run package:win",
+    "verify": "node scripts/run-verification.cjs"
+  },
+  "keywords": [
+    "pokemon",
+    "type-chart",
+    "electron"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^12.2.0"
+  },
+  "devDependencies": {
+    "electron": "^37.2.4",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.typematchup.app",
+    "productName": "Type Match Up",
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/better-sqlite3/**",
+      "src/data/*.sqlite"
+    ],
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}

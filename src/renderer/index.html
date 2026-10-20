@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Type Match Up</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="brand-mark"><span></span><span></span></div>
+        <div>
+          <p class="eyebrow">TEAM BUILDER</p>
+          <h1>Type Match <em>Up</em></h1>
+        </div>
+        <p class="hero-copy">Build smarter teams.<br />Spot every opening.</p>
+      </section>
+
+      <nav class="app-tabs" role="tablist" aria-label="Application sections">
+        <button id="team-tab" type="button" role="tab" aria-selected="true" aria-controls="team-workspace">Team Builder</button>
+        <button id="routes-tab" type="button" role="tab" aria-selected="false" aria-controls="routes-workspace" tabindex="-1">Game Routes &amp; Encounters</button>
+      </nav>
+      
+      <section id="team-workspace" class="workspace" role="tabpanel" aria-labelledby="team-tab">
+        <div class="team-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">YOUR PARTY</p>
+              <h2>Choose your team</h2>
+            </div>
+            <div class="team-actions"><button id="open-saved-teams" class="secondary-button" type="button">Saved teams</button><button id="clear-team" class="text-button" type="button">Clear team</button></div>
+          </div>
+
+          <div class="party-tools">
+            <form id="pokemon-form" class="search-bar">
+              <label for="pokemon-name" class="sr-only">Pokémon name</label>
+              <input id="pokemon-name" autocomplete="off" placeholder="Add a Pokémon… e.g. Garchomp" maxlength="40" />
+              <button class="primary-button" type="submit"><span>+</span> Add to team</button>
+            </form>
+            <p id="form-message" class="form-message" role="status"></p>
+
+            <details class="showdown-import">
+              <summary><span>⌁</span> Import a Pokémon Showdown team <small>Replaces current party</small></summary>
+              <form id="showdown-form">
+                <label for="showdown-text">Paste a Showdown export</label>
+                <textarea id="showdown-text" spellcheck="false" placeholder="Garchomp @ Leftovers&#10;Ability: Rough Skin&#10;- Earthquake&#10;- Dragon Claw&#10;- Stealth Rock&#10;- Swords Dance"></textarea>
+                <button class="secondary-button" type="submit">Import party</button>
+              </form>
+            </details>
+          </div>
+
+          <div id="team-grid" class="team-grid" aria-live="polite"></div>
+          <p class="data-note">Current party autosaves locally. Use Saved teams to keep named snapshots for different games.</p>
+        </div>
+
+        <div class="analysis-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">LIVE ANALYSIS</p>
+              <h2>Team report</h2>
+            </div>
+            <span id="team-count" class="team-count">0 / 6</span>
+          </div>
+          <div id="empty-analysis" class="empty-analysis">
+            <div class="empty-orb">?</div>
+            <h3>Your matchup map awaits.</h3>
+            <p>Add Pokémon to uncover shared weaknesses and the types that shore them up.</p>
+          </div>
+
+          <div id="analysis-content" hidden>
+            <div class="report-summary-grid">
+              <section class="report-section">
+                <div class="report-title"><h3>Defensive weaknesses</h3><span>Shared and individual exposures</span></div>
+                <div id="holes" class="holes"></div>
+              </section>
+
+              <section class="report-section">
+                <div class="report-title"><h3>Best additions</h3><span>Types that protect your gaps</span></div>
+                <div id="suggestions" class="suggestions"></div>
+              </section>
+
+              <section class="report-section coverage-section">
+                <div class="report-title"><h3>Move type coverage</h3><span id="coverage-count">Imported moves only</span></div>
+                <div id="move-coverage" class="move-coverage"></div>
+              </section>
+            </div>
+
+            <button id="open-matchups" class="matchup-launch" type="button">
+              <span>⊞</span><span><b>View full matchup map</b><small>Weakness, resistance, and immunity counts</small></span><i>→</i>
+            </button>
+
+          </div>
+        </div>
+      </section>
+
+      <section id="routes-workspace" class="workspace" role="tabpanel" aria-labelledby="routes-tab" hidden>
+        <div class="section-heading"><div><p class="eyebrow">EXPLORE THE GAMES</p><h2>Game Routes &amp; Encounters</h2></div><span class="offline-badge">Available offline</span></div>
+        <p class="routes-intro">Choose a game, then a route or location to see the encounter slots recorded by PokéAPI.</p>
+        <div class="explorer-grid">
+          <section class="explorer-column"><label for="game-search">Games</label><input id="game-search" type="search" placeholder="Filter games…" /><div id="game-list" class="explorer-list" aria-label="Games"></div></section>
+          
+          <section class="explorer-column"><label for="route-search">Routes &amp; locations</label><input id="route-search" type="search" placeholder="Filter routes…" disabled /><div id="route-list" class="explorer-list" aria-label="Routes and locations"><p class="list-empty">Choose a game to view its routes.</p></div></section>
+          
+          <section class="encounter-panel" aria-labelledby="encounter-title">
+            <h3 id="encounter-title">Choose a route</h3><p id="encounter-context" class="data-note">Encounter availability varies by game and location.</p>
+            <div class="encounter-filters"><label for="encounter-method">Method</label><select id="encounter-method" disabled><option value="">All methods</option></select><label for="encounter-search" class="sr-only">Filter Pokémon or conditions</label><input id="encounter-search" type="search" placeholder="Pokémon or condition…" disabled /></div>
+            <p id="route-message" class="form-message" role="status"></p>
+            <div id="encounter-results"><p class="list-empty">Select a game and route to explore possible encounters.</p></div>
+            <p class="encounter-note">Rates are per encounter slot within the listed method and conditions, not the chance per step. Repeated Pokémon occupy separate slots. Alternative conditions are not additive. Missing rates appear as —; missing data does not mean no encounters.</p>
+          </section>
+        </div>
+      </section>
+
+    </main>
+    <dialog id="saved-teams-modal" class="saved-teams-modal" aria-labelledby="saved-teams-title">
+      <div class="modal-header"><div><p class="eyebrow">YOUR COLLECTION</p><h2 id="saved-teams-title">Saved teams</h2></div><button id="close-saved-teams" class="modal-close" type="button" aria-label="Close saved teams">×</button></div>
+      <p class="modal-copy">Save the current party with its items, moves, nature, and Stat Points. Loading replaces the current party; saved snapshots stay unchanged until you overwrite them.</p>
+      <form id="save-team-form" class="save-team-form">
+        <label>Team name<input id="saved-team-name" maxlength="80" required placeholder="e.g. Kanto adventure" /></label>
+        <label>Generation<select id="saved-team-generation"><option value="">Any generation</option></select></label>
+        <label>Game<select id="saved-team-game"><option value="">Any game</option></select></label>
+        <div class="snapshot-actions"><button id="save-team-submit" class="primary-button" type="submit">Save new team</button><button id="cancel-team-edit" class="text-button" type="button" hidden>Cancel overwrite</button></div>
+      </form>
+      <p id="saved-team-message" class="form-message" role="status"></p>
+      <div class="saved-filters"><label for="saved-team-search" class="sr-only">Search saved teams</label><input id="saved-team-search" type="search" placeholder="Search teams, games, or Pokémon…" /><label for="saved-team-filter" class="sr-only">Filter by generation</label><select id="saved-team-filter"><option value="">All generations</option></select></div>
+      <div id="saved-team-list" class="saved-team-list" aria-label="Saved teams"></div>
+    </dialog>
+
+    <dialog id="matchup-modal" class="matchup-modal" aria-labelledby="matchup-modal-title">
+      <div class="modal-header">
+        <div><p class="eyebrow">DETAILED DEFENSE</p><h2 id="matchup-modal-title">Full matchup map</h2></div>
+        <button id="close-matchups" class="modal-close" type="button" aria-label="Close matchup map">×</button>
+      </div>
+      <p class="modal-copy">Each row shows how many party members are weak to, resist, or are immune to that attacking type.</p>
+      <div id="matchups" class="matchups"></div>
+    </dialog>
+
+    <dialog id="pokemon-modal" class="pokemon-modal" aria-labelledby="pokemon-modal-title">
+      <form id="pokemon-build-form" method="dialog">
+        <div class="modal-header">
+          <div class="pokemon-modal-title"><div id="detail-sprite" class="detail-sprite"></div><div><p class="eyebrow">PARTY MEMBER</p><h2 id="pokemon-modal-title">Pokémon details</h2><div id="detail-types" class="type-pills"></div></div></div>
+          <button id="close-pokemon" class="modal-close" type="button" aria-label="Close Pokémon details">×</button>
+        </div>
+        <div class="detail-grid">
+          <section class="build-section nature-section"><label for="nature-select">Nature</label><select id="nature-select"></select><p id="nature-effect" class="nature-effect"></p></section>
+          <section class="build-section moves-section"><span>Moves</span><ul id="detail-moves" class="detail-moves"></ul></section>
+        </div>
+        <section class="stats-section">
+          <div class="stats-heading"><div><h3>Champions battle stats</h3><p>Calculated at level 50 · IVs fixed at 31</p></div><span>Base / SP / final stat</span></div>
+          <div class="stat-table" role="table">
+            <div class="stat-row stat-labels" role="row"><span>Stat</span><span>Base</span><span>SP</span><span>Final</span></div>
+            <div id="stat-editor"></div>
+          </div>
+        </section>
+        <p id="build-message" class="build-message" role="status"></p>
+        <div class="build-actions"><button id="cancel-build" class="text-button" type="button">Cancel</button><button class="primary-button" type="submit">Save changes</button></div>
+      </form>
+    </dialog>
+
+    <template id="slot-template">
+      <article class="pokemon-slot empty-slot">
+        <span class="slot-number"></span>
+        <div class="empty-plus">+</div>
+        <p>Open slot</p>
+      </article>
+    </template>
+    
+    <script src="./renderer.js"></script>
+  </body>
+</html>
